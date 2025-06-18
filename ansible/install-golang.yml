@@ -1,0 +1,26 @@
+---
+- name: Golang
+  hosts: localhost
+  become: yes
+  tasks:
+
+    - name: Golang
+      get-url:
+        url: https://go.dev/d1/go1.22.3.linux-amd64.tar.gz
+        dest: /temp/go.tar.gz
+
+    - name: /usr/local
+      unarchive:
+        src: /tmp/go.tar.gz
+        dest: usr/local
+        remote_src: yes
+
+    - name: Go PATH
+      lineinfile:
+      path: /etc/profile
+      line: 'export PATH=$PATH:/usr/local/go/bin'
+      insertafter: go_version_output
+
+    - name: Go
+      debug:
+      var: go_version_output.stdout
